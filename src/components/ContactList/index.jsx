@@ -4,7 +4,7 @@ import './contactListStyles.scss';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import appTransitions from '../../transitions/appTransition.module.css';
 
-const ContactList = ({ handleDeleteContact, contacts, filter }) => {
+const ContactList = ({ contacts, filter, handleDeleteContact}) => {
   const filteredContacts = (contacts, filterValue) => {
     return contacts.filter(contact =>
       contact.name.toLowerCase().includes(filterValue.toLowerCase()),
@@ -13,18 +13,18 @@ const ContactList = ({ handleDeleteContact, contacts, filter }) => {
 
   return (
     <TransitionGroup component="ul" className="contactList">
-      {filteredContacts( contacts, filter).map(contact => (
+      {filteredContacts( contacts, filter).map(({name, number, id})=> (
         <CSSTransition
-          key={contact.id}
+          key={id}
           classNames={appTransitions}
           timeout={300}
           unmountOnExit
         >
           <li className="contactListItem">
-            <p className="contactListField">{contact.name}</p>
-            <p className="contactListField">{contact.number}</p>
+            <p className="contactListField">{name}</p>
+            <p className="contactListField">{number}</p>
             <button
-              onClick={() => handleDeleteContact(contact.id)}
+              onClick={() => handleDeleteContact(id)}
               type="button"
               className="material-icons"
             >

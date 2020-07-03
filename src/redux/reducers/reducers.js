@@ -6,12 +6,12 @@ const contacts = (state = allContacts, { type, payload, id, contacts }) => {
   switch (type) {
     case Type.ADD_CONTACT:
       return [
-        ...state,
         {
           name: payload.name,
           number: payload.number,
           id: payload.id,
         },
+        ...state,
       ];
 
     case Type.DELETE_CONTACT:
