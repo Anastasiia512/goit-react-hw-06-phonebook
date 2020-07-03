@@ -2,15 +2,15 @@ import { combineReducers } from 'redux';
 import { Type } from '../actions/appActions';
 import { allContacts } from '../contacts/defaultContacts';
 
-const contactsReducer = (state = allContacts, { action, id, contacts }) => {
-  switch (action.type) {
+const contacts = (state = allContacts, { type, payload, id, contacts }) => {
+  switch (type) {
     case Type.ADD_CONTACT:
       return [
         ...state,
         {
-          name: action.payload.name,
-          number: action.payload.number,
-          id: action.payload.id,
+          name: payload.name,
+          number: payload.number,
+          id: payload.id,
         },
       ];
 
@@ -25,23 +25,27 @@ const contactsReducer = (state = allContacts, { action, id, contacts }) => {
   }
 };
 
-const filterReducer = (state = '', action) => {
-  switch (action.type) {
-    case FILTER_CONTACTS:
-      return action.payload.value;
+const filter = (state = '', { type, payload }) => {
+  switch (type) {
+    case Type.FILTER_CONTACTS:
+      return payload;
 
     default:
       return state;
   }
 };
 
-const warningReducer = (state = false, action) => {
-  switch (action.type) {
-    case WARNING:
-      return action.payload.isWarning;
+const warning = (state = false, { type, payload }) => {
+  switch (type) {
+    case Type.WARNING:
+      return payload;
     default:
       return state;
   }
 };
 
-export default combineReducers({ contactsReducer, filterReducer, warningReducer });
+export default combineReducers({
+  contacts,
+  filter,
+  warning,
+});

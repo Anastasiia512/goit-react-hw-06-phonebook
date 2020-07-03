@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 
-import ContactForm from '../ContactForm/index';
-import Filter from '../Filter/index';
-import ContactList from '../ContactList/index';
+import ContactForm from '../../redux/containers/contactFormContainer';
+import Filter from '../../redux/containers/filterContainer';
+import ContactList from '../../redux/containers/contactListContainer';
+
 import css from './appStyles.module.css';
 import { CSSTransition } from 'react-transition-group';
 import appTransitions from '../../transitions/appTransition.module.css';
-
 
 export default class App extends Component {
   state = {
@@ -14,17 +14,16 @@ export default class App extends Component {
   };
 
   componentDidMount() {
-    if (!this.state.contacts.length) {
-      const contacts = JSON.parse(localStorage.getItem('contacts'));
-      if (contacts) {
-        getContacts(contacts);
-      }
+    this.setState({ isOpen: true });
+    const LScontacts = JSON.parse(localStorage.getItem('contacts'));
+    if (LScontacts) {
+      this.props.getContacts(LScontacts);
     }
   }
 
-  componentDidUpdate(prevState) {
-    if (prevState.contacts.length !== this.state.contacts.length) {
-      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+  componentDidUpdate(prevProps) {
+    if (prevProps.contacts !== this.props.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.props.contacts));
     }
   }
 
@@ -32,7 +31,6 @@ export default class App extends Component {
     const { isOpen } = this.state;
     return (
       <>
-        
         <CSSTransition
           in={isOpen}
           classNames={appTransitions}
@@ -43,7 +41,7 @@ export default class App extends Component {
         </CSSTransition>
         <ContactForm />
         <Filter />
-        <ContactList />)
+        <ContactList />
       </>
     );
   }

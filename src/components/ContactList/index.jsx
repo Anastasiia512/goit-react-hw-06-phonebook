@@ -13,7 +13,7 @@ const ContactList = ({ handleDeleteContact, contacts, filter }) => {
 
   return (
     <TransitionGroup component="ul" className="contactList">
-      {filteredContacts(filter, contacts).map(contact => (
+      {filteredContacts( contacts, filter).map(contact => (
         <CSSTransition
           key={contact.id}
           classNames={appTransitions}

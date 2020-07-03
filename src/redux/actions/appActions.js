@@ -8,7 +8,7 @@ export const Type = {
     LOCAL_STORAGE_CONTACTS: 'LOCAL_STORAGE_CONTACTS'
 }
 
-export const addContact =({name, number}) => ({
+export const addContact =(name, number) => ({
     type: Type.ADD_CONTACT,
     payload: {name, number, id: v4()}
 })

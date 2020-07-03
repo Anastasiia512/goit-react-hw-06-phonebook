@@ -1,74 +1,86 @@
-import React, { Component } from 'react';
+import React from 'react';
+import propTypes from 'prop-types';
+import { CSSTransition } from 'react-transition-group';
+
 import './contactFormStyles.scss';
 import ContactNotice from '../ContactNotice/ContactNotice';
 import contactNoticeTransition from '../../transitions/contactNoticeTransition.module.css';
 
-export default class ContactForm extends Component {
-  state = {
-    name: '',
-    number: '',
+const ContactForm = ({ contacts, addContact, toggleWarning, isWarning }) => {
+  let nameInput;
+  let numberInput;
+
+  const filterContact = contacts => {
+    return contacts.find(contact => contact.number === numberInput.value);
   };
 
-  filterContact = contacts => {
-    return contacts.find(contact => contact.number === this.state.number);
+  const handleClearValue = () => {
+    nameInput.value = '';
+    numberInput.value = '';
   };
 
-  render() {
-    const { name, number } = this.state;
-
-    return (
-      <>
-        <form
-          className="contactForm"
-          onSubmit={e => {
-            e.preventDefault();
-            if (!this.filterContact(contacts)) {
-              contactToAdd(name, number);
-              this.setState({ name: '', number: '' });
-              return;
-            }
-            toggleWarning(true);
-            setTimeout(() => {
-              toggleWarning(false);
-            }, 2000);
-          }}
+  return (
+    <>
+      <form
+        className="contactForm"
+        onSubmit={e => {
+          e.preventDefault();
+          if (!filterContact(contacts)) {
+            addContact(nameInput.value, numberInput.value);
+            handleClearValue();
+            return;
+          }
+          toggleWarning(true);
+          setTimeout(() => {
+            toggleWarning(false);
+          }, 2000);
+          handleClearValue();
+        }}
+      >
+        <CSSTransition
+          in={isWarning}
+          classNames={contactNoticeTransition}
+          timeout={300}
+          unmountOnExit
         >
-          <CSSTransition
-            in={isWarning}
-            classNames={contactNoticeTransition}
-            timeout={300}
-            unmountOnExit
-          >
-            <ContactNotice />
-          </CSSTransition>
-          <div className="contactInputHolder">
-            <label>Name</label>
-            <input
-              className="contactFormInput"
-              type="text"
-              required
-              name="name"
-              id="name"
-              value={this.setState(name)}
-            />
-          </div>
-          <div className="contactInputHolder">
-            <label>Number</label>
-            <input
-              className="contactFormInput"
-              type="number"
-              name="number"
-              required
-              value={this.setState(number)}
-            />
-          </div>
-          <div className="contactFormButtonHolder">
-            <button className="contactFormButton" type="submit">
-              Add contact
-            </button>
-          </div>
-        </form>
-      </>
-    );
-  }
-}
+          <ContactNotice />
+        </CSSTransition>
+        <div className="contactInputHolder">
+          <label>Name</label>
+          <input
+            ref={node => (nameInput = node)}
+            className="contactFormInput"
+            type="text"
+            required
+            name="name"
+            id="name"
+          />
+        </div>
+        <div className="contactInputHolder">
+          <label>Number</label>
+          <input
+            className="contactFormInput"
+            type="number"
+            name="number"
+            required
+            ref={node => (numberInput = node)}
+          />
+        </div>
+        <div className="contactFormButtonHolder">
+          <button className="contactFormButton" type="submit">
+            Add contact
+          </button>
+        </div>
+      </form>
+    </>
+  );
+};
+
+ContactForm.propTypes = {
+  contacts: propTypes.array.isRequired,
+  addContact: propTypes.func.isRequired,
+  toggleWarning: propTypes.func.isRequired,
+  isWarning: propTypes.bool.isRequired,
+};
+
+export default ContactForm;
